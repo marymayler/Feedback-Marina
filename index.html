@@ -1,0 +1,701 @@
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+							<style>
+								body {
+									background-color: white; /* Ensure the iframe has a white background */
+								}
+
+								
+							</style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Обратная связь — ДНК ФМИ</title>
+<style>
+  :root {
+    --bg-start: #1a1740;
+    --bg-mid: #3d3570;
+    --bg-end: #2e2856;
+    --card: rgba(255,255,255,0.07);
+    --card-border: rgba(255,255,255,0.12);
+    --text: #f0f2f8;
+    --muted: #a8b2d0;
+    --accent-blue: #4fc3f7;
+    --accent-purple: #ce93d8;
+    --accent-teal: #80cbc4;
+    --accent-gradient: linear-gradient(135deg, #4fc3f7, #ce93d8, #80cbc4);
+    --radius: 18px;
+    --shadow: 0 8px 32px rgba(0,0,0,0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(160deg, var(--bg-start), var(--bg-mid), var(--bg-end));
+    background-attachment: fixed;
+    color: var(--text);
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* === Side quotes (fixed, non-overlapping) === */
+  .side-quotes {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .sq {
+    position: absolute;
+    font-style: italic;
+    font-size: 0.8rem;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.28);
+    max-width: 210px;
+    white-space: normal;
+  }
+  .sq .author {
+    display: block;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 0.72rem;
+    margin-top: 4px;
+    color: rgba(255,255,255,0.38);
+  }
+  /* Left side — 4 quotes, evenly spaced */
+  .sq:nth-child(1) { top: 6%;   left: 2%;   transform: rotate(-2deg); }
+  .sq:nth-child(2) { top: 32%;  left: 1.5%; transform: rotate(1.5deg); }
+  .sq:nth-child(3) { top: 58%;  left: 2%;   transform: rotate(-1deg); }
+  .sq:nth-child(4) { top: 82%;  left: 1%;   transform: rotate(2deg); }
+  /* Right side — 4 quotes, evenly spaced */
+  .sq:nth-child(5) { top: 8%;   right: 2%;  transform: rotate(2deg); }
+  .sq:nth-child(6) { top: 34%;  right: 1.5%;transform: rotate(-1.5deg); }
+  .sq:nth-child(7) { top: 60%;  right: 2%;  transform: rotate(1deg); }
+  .sq:nth-child(8) { top: 84%;  right: 1%;  transform: rotate(-2deg); }
+
+  @media (max-width: 1200px) {
+    .side-quotes { display: none; }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 50px 20px 100px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 44px;
+    animation: fadeUp 0.7s ease both;
+  }
+  .header h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header p {
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* Progress */
+  .progress-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(26,23,64,0.88);
+    backdrop-filter: blur(12px);
+    padding: 14px 0;
+    margin-bottom: 24px;
+  }
+  .progress-bar {
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--accent-gradient);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+  .progress-label {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 30px;
+    margin-bottom: 28px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .card.visible { opacity: 1; transform: translateY(0); }
+
+  .card h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card h2 .num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.82rem; font-weight: 700;
+    flex-shrink: 0;
+    color: #fff;
+  }
+  .card .subtitle {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 22px;
+  }
+
+  /* Value blocks */
+  .value-block { margin-bottom: 28px; }
+  .value-block:last-child { margin-bottom: 0; }
+  .value-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    display: inline-block;
+  }
+  .value-a .value-title { background: rgba(79,195,247,0.15); color: var(--accent-blue); }
+  .value-b .value-title { background: rgba(206,147,216,0.15); color: var(--accent-purple); }
+  .value-c .value-title { background: rgba(128,203,196,0.15); color: var(--accent-teal); }
+
+  /* Rating items */
+  .rating-item {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .rating-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .rating-label {
+    font-size: 0.92rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .rating-label .tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 6px;
+    cursor: help;
+    border-bottom: 1px dotted currentColor;
+    position: relative;
+    display: inline-block;
+  }
+  .value-a .tag { color: var(--accent-blue); }
+  .value-b .tag { color: var(--accent-purple); }
+  .value-c .tag { color: var(--accent-teal); }
+
+  /* Tag tooltip */
+  .rating-label .tag .tag-tooltip {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 0;
+    background: rgba(15,13,40,0.96);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 0.8rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: normal;
+    color: var(--text);
+    line-height: 1.5;
+    width: 300px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(5px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+    pointer-events: none;
+    z-index: 100;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+  }
+  .rating-label .tag .tag-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 18px;
+    border: 6px solid transparent;
+    border-top-color: rgba(15,13,40,0.96);
+  }
+  .rating-label .tag:hover .tag-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .scale {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .scale button {
+    flex: 1;
+    aspect-ratio: 1;
+    max-width: 46px;
+    border: 2px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.04);
+    border-radius: 12px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .scale button:hover {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+    transform: translateY(-2px);
+  }
+  .scale button.active {
+    background: var(--accent-gradient);
+    border-color: transparent;
+    color: #fff;
+    transform: scale(1.08);
+    box-shadow: 0 4px 14px rgba(79,195,247,0.3);
+  }
+
+  /* Example fields — colored per block */
+  .example-field { margin-top: 8px; }
+  .example-field label {
+    font-size: 0.78rem;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .value-a .example-field label { color: var(--accent-blue); }
+  .value-b .example-field label { color: var(--accent-purple); }
+  .value-c .example-field label { color: var(--accent-teal); }
+
+  .example-field input {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.88rem;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  }
+  .value-a .example-field input { border: 1.5px solid rgba(79,195,247,0.3); }
+  .value-b .example-field input { border: 1.5px solid rgba(206,147,216,0.3); }
+  .value-c .example-field input { border: 1.5px solid rgba(128,203,196,0.3); }
+  .value-a .example-field input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(79,195,247,0.15);
+    background: rgba(79,195,247,0.06);
+  }
+  .value-b .example-field input:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 0 3px rgba(206,147,216,0.15);
+    background: rgba(206,147,216,0.06);
+  }
+  .value-c .example-field input:focus {
+    outline: none;
+    border-color: var(--accent-teal);
+    box-shadow: 0 0 0 3px rgba(128,203,196,0.15);
+    background: rgba(128,203,196,0.06);
+  }
+  .example-field input::placeholder { color: rgba(255,255,255,0.25); }
+
+  /* Text areas (Part 2 — neutral) */
+  textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 14px;
+    border: 1.5px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.92rem;
+    resize: vertical;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  textarea:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 0 3px rgba(206,147,216,0.15);
+  }
+  textarea::placeholder { color: rgba(255,255,255,0.25); }
+
+  .open-q { margin-bottom: 22px; }
+  .open-q:last-child { margin-bottom: 0; }
+  .open-q label {
+    font-size: 0.92rem;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  /* Submit */
+  .submit-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 14px;
+    background: var(--accent-gradient);
+    color: #fff;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 8px;
+  }
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(79,195,247,0.35);
+  }
+  .submit-btn:active { transform: translateY(0); }
+
+  /* Thank you */
+  .thank-you {
+    display: none;
+    text-align: center;
+    padding: 70px 20px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .thank-you.show { display: block; }
+  .thank-you .icon { font-size: 4rem; margin-bottom: 20px; animation: bounce 1s ease infinite alternate; }
+  .thank-you h2 { font-size: 1.6rem; margin-bottom: 10px; }
+  .thank-you p { color: var(--muted); }
+
+  @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes bounce { from { transform:translateY(0); } to { transform:translateY(-10px); } }
+
+  @media (max-width: 480px) {
+    .header h1 { font-size: 1.5rem; }
+    .card { padding: 20px; }
+    .scale button { max-width: 38px; font-size: 0.78rem; }
+    .rating-label .tag .tag-tooltip { width: 240px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Fixed side quotes — 8 total, 4 left + 4 right -->
+<div class="side-quotes">
+  <div class="sq">«Нам всем нужны люди, которые будут давать нам обратную связь. Именно так мы совершенствуемся»<span class="author">Билл Гейтс</span></div>
+  <div class="sq">«Ключ к обучению — обратная связь. Почти невозможно чему-то научиться без неё»<span class="author">Стивен Д. Левитт</span></div>
+  <div class="sq">«Обратная связь — это завтрак чемпионов»<span class="author">Кен Бланчард</span></div>
+  <div class="sq">«Утаивание обратной связи — это выбор в пользу комфорта, а не роста»<span class="author">Адам Грант</span></div>
+  <div class="sq">«Прямая и личная обратная связь — действительно самый простой и эффективный способ мотивации»<span class="author">Патрик Ленсиони</span></div>
+  <div class="sq">«Если мы ограждаем себя от любой обратной связи, мы перестаём расти»<span class="author">Брене Браун</span></div>
+  <div class="sq">«Неудача — это просто обратная связь о том, что что-то мешает появлению и развитию величайшей версии вас самих»<span class="author">Мать Тереза</span></div>
+  <div class="sq">«Обратная связь — это компас величия: она подсказывает, чего избегать, чему учиться и в чём преуспевать»<span class="author">Хенрик Седер</span></div>
+</div>
+
+<div class="container">
+  <div class="header">
+    <h1>Обратная связь</h1>
+    <p>Здравствуйте! Буду благодарна за вашу честную обратную связь о моей работе в контексте наших ценностей. Ответы анонимны и займут 5–7 минут.</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">Прогресс: 0%</div>
+  </div>
+
+  <form id="surveyForm">
+
+    <!-- PART 1 -->
+    <div class="card">
+      <h2><span class="num" style="background:var(--accent-gradient);">1</span> Оценки по ценностям ФМИ</h2>
+      <p class="subtitle">Оцените по шкале от 1 до 5. Наведите курсор на название ценности, чтобы увидеть её описание.</p>
+
+      <!-- Block A -->
+      <div class="value-block value-a">
+        <div class="value-title">Мы заботимся друг о друге, потребителях, окружающем мире</div>
+
+        <div class="rating-item">
+          <label class="rating-label"><span class="tag">Осознанность<span class="tag-tooltip">Понимать самих себя, знать, как мы влияем на других, управлять своими эмоциями и поведениями, давая возможность каждому раскрыть свой потенциал.</span></span> Марина понимает, как её решения влияют на команду и других людей, и учитывает это в работе.</label>
+          <div class="scale" data-name="awareness">
+            <button type="button" value="1">1</button><button type="button" value="2">2</button><button type="button" value="3">3</button><button type="button" value="4">4</button><button type="button" value="5">5</button>
+          </div>
+          <div class="example-field">
+            <label>При желании поделись примером:</label>
+            <input type="text" name="ex_awareness" placeholder="Например: при планировании задач учла нагрузку коллег...">
+          </div>
+        </div>
+
+        <div class="rating-item">
+          <label class="rating-label"><span class="tag">Инклюзивность<span class="tag-tooltip">Целенаправленно искать, слышать и учитывать различные точки зрения для достижения наилучших результатов.</span></span> Марина активно слушает разные точки зрения и учитывает их при принятии решений.</label>
+          <div class="scale" data-name="inclusiveness">
+            <button type="button" value="1">1</button><button type="button" value="2">2</button><button type="button" value="3">3</button><button type="button" value="4">4</button><button type="button" value="5">5</button>
+          </div>
+          <div class="example-field">
+            <label>При желании поделись примером:</label>
+            <input type="text" name="ex_inclusiveness" placeholder="Например: на митинге спросила мнение стажёра...">
+          </div>
+        </div>
+
+        <div class="rating-item">
+          <label class="rating-label"><span class="tag">Эмпатия<span class="tag-tooltip">Проявлять заботу, понимать других и внимательно относиться к их потребностям.</span></span> Марина проявляет заботу о коллегах, замечает их потребности и реагирует на них.</label>
+          <div class="scale" data-name="empathy">
+            <button type="button" value="1">1</button><button type="button" value="2">2</button><button type="button" value="3">3</button><button type="button" value="4">4</button><button type="button" value="5">5</button>
+          </div>
+          <div class="example-field">
+            <label>При желании поделись примером:</label>
+            <input type="text" name="ex_empathy" placeholder="Например: заметила, что коллеге тяжело, и предложила помощь...">
+          </div>
+        </div>
+      </div>
+
+      <!-- Block B -->
+      <div class="value-block value-b">
+        <div class="value-title">Мы становимся лучше, когда мы вместе</div>
+
+        <div class="rating-item">
+          <label class="rating-label"><span class="tag">Доверие<span class="tag-tooltip">Выстраивать и укреплять доверие: действовать прозрачно, честно и открыто общаться.</span></span> Марина действует прозрачно и честно, с ней легко строить доверительные отношения.</label>
+          <div class="scale" data-name="trust">
+            <button type="button" value="1">1</button><button type="button" value="2">2</button><button type="button" value="3">3</button><button type="button" value="4">4</button><button type="button" value="5">5</button>
+          </div>
+          <div class="example-field">
+            <label>При желании поделись примером:</label>
+            <input type="text" name="ex_trust" placeholder="Например: открыто рассказала о проблеме до того, как она стала критичной...">
+          </div>
+        </div>
+
+        <div class="rating-item">
+          <label class="rating-label"><span class="tag">Сотрудничество<span class="tag-tooltip">Уметь переступать через своё эго, разрушать барьеры, ставить долгосрочные цели выше краткосрочных и объединять усилия ради общей цели.</span></span> Марина готова отступить от своего эго ради общей цели, разрушает барьеры между ролями и отделами.</label>
+          <div class="scale" data-name="collaboration">
+            <button type="button" value="1">1</button><button type="button" value="2">2</button><button type="button" value="3">3</button><button type="button" value="4">4</button><button type="button" value="5">5</button>
+          </div>
+          <div class="example-field">
+            <label>При желании поделись примером:</label>
+            <input type="text" name="ex_collaboration" placeholder="Например: помогла смежному отделу с задачей вне своей зоны...">
+          </div>
+        </div>
+
+        <div class="rating-item">
+          <label class="rating-label"><span class="tag">Признание<span class="tag-tooltip">Своевременно признавать успехи (большие и малые), отмечать и ценить вклад каждого.</span></span> Марина отмечает и ценит вклад коллег, не присваивает чужие заслуги.</label>
+          <div class="scale" data-name="recognition">
+            <button type="button" value="1">1</button><button type="button" value="2">2</button><button type="button" value="3">3</button><button type="button" value="4">4</button><button type="button" value="5">5</button>
+          </div>
+          <div class="example-field">
+            <label>При желании поделись примером:</label>
+            <input type="text" name="ex_recognition" placeholder="Например: публично поблагодарила коллегу за идею...">
+          </div>
+        </div>
+      </div>
+
+      <!-- Block C -->
+      <div class="value-block value-c">
+        <div class="value-title">Мы задаём правила игры</div>
+
+        <div class="rating-item">
+          <label class="rating-label"><span class="tag">Готовность к вызовам<span class="tag-tooltip">Действовать смело и решительно в поиске инновационных и прорывных решений.</span></span> Марина смело берётся за нестандартные задачи и ищет прорывные решения.</label>
+          <div class="scale" data-name="challenge">
+            <button type="button" value="1">1</button><button type="button" value="2">2</button><button type="button" value="3">3</button><button type="button" value="4">4</button><button type="button" value="5">5</button>
+          </div>
+          <div class="example-field">
+            <label>При желании поделись примером:</label>
+            <input type="text" name="ex_challenge" placeholder="Например: предложила новый подход там, где все шли по шаблону...">
+          </div>
+        </div>
+
+        <div class="rating-item">
+          <label class="rating-label"><span class="tag">Гибкость<span class="tag-tooltip">Проявлять инициативу и идти на продуманные риски, экспериментировать, адаптироваться и учиться на ошибках.</span></span> Марина быстро адаптируется к изменениям, экспериментирует и учится на ошибках.</label>
+          <div class="scale" data-name="flexibility">
+            <button type="button" value="1">1</button><button type="button" value="2">2</button><button type="button" value="3">3</button><button type="button" value="4">4</button><button type="button" value="5">5</button>
+          </div>
+          <div class="example-field">
+            <label>При желании поделись примером:</label>
+            <input type="text" name="ex_flexibility" placeholder="Например: после смены приоритетов перестроила план за день...">
+          </div>
+        </div>
+
+        <div class="rating-item">
+          <label class="rating-label"><span class="tag">Нацеленность на результат<span class="tag-tooltip">Действовать решительно для достижения наилучшего результата, доводить дело до конца и добиваться поставленных целей вопреки вызовам и преградам.</span></span> Марина доводит дела до конца и добивается поставленных целей даже при препятствиях.</label>
+          <div class="scale" data-name="result">
+            <button type="button" value="1">1</button><button type="button" value="2">2</button><button type="button" value="3">3</button><button type="button" value="4">4</button><button type="button" value="5">5</button>
+          </div>
+          <div class="example-field">
+            <label>При желании поделись примером:</label>
+            <input type="text" name="ex_result" placeholder="Например: помогла команде выполнить задачу Х, несмотря на...">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PART 2 -->
+    <div class="card">
+      <h2><span class="num" style="background:var(--accent-gradient);">2</span> Открытые вопросы</h2>
+      <p class="subtitle">Ответьте в свободной форме — чем конкретнее, тем ценнее.</p>
+
+      <div class="open-q">
+        <label>Какие 2–3 качества или навыка вы считаете моими главными сильными сторонами? Что делается особенно хорошо?</label>
+        <textarea name="strengths" placeholder="Например: отлично объясняет сложные вещи, всегда приходит на помощь..."></textarea>
+      </div>
+
+      <div class="open-q">
+        <label>Если бы вы могли дать совет для профессионального роста, что бы это было?</label>
+        <textarea name="advice" placeholder="Например: стоит чаще делегировать, больше спрашивать мнение команды..."></textarea>
+      </div>
+
+      <div class="open-q">
+        <label>Конкретный пример ситуации, когда работа произвела положительное впечатление:</label>
+        <textarea name="positive-example" placeholder="Опишите ситуацию..."></textarea>
+      </div>
+
+      <div class="open-q">
+        <label>Есть ли пример, где результат мог быть лучше? Над чем стоит поработать?</label>
+        <textarea name="improvement-example" placeholder="Опишите ситуацию..."></textarea>
+      </div>
+
+      <div class="open-q">
+        <label>Есть ли что-то ещё, что вы хотели бы сказать о нашем сотрудничестве?</label>
+        <textarea name="additional" placeholder="Любые дополнительные мысли..."></textarea>
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn">Отправить ответ ✨</button>
+  </form>
+
+  <div class="thank-you" id="thankYou">
+    <div class="icon">🎉</div>
+    <h2>Спасибо за ваш отзыв!</h2>
+    <p>Ваши ответы помогут мне стать лучше. Спасибо, что уделили время.</p>
+  </div>
+</div>
+
+<script>
+  // Scroll reveal
+  const cards = document.querySelectorAll('.card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  cards.forEach(c => observer.observe(c));
+
+  // Ratings
+  const ratings = {};
+  const totalQuestions = 9;
+
+  document.querySelectorAll('.scale').forEach(scale => {
+    const name = scale.dataset.name;
+    scale.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        scale.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        ratings[name] = parseInt(btn.value);
+        updateProgress();
+      });
+    });
+  });
+
+  function updateProgress() {
+    const answered = Object.keys(ratings).length;
+    const percent = Math.round((answered / totalQuestions) * 100);
+    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('progressLabel').textContent = `Прогресс: ${percent}%`;
+  }
+
+  // Form submit → Formspree
+  document.getElementById('surveyForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const scales = document.querySelectorAll('.scale');
+    const unfilled = [...scales].find(s => !s.querySelector('button.active'));
+    if (unfilled) {
+      unfilled.closest('.card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      alert('Пожалуйста, оцените все 9 пунктов в первой части.');
+      return;
+    }
+
+    const form = e.target;
+    const data = {
+      _subject: 'Новый ответ на опросник обратной связи',
+      ratings: { ...ratings },
+      examples: {
+        awareness: form.ex_awareness.value.trim(),
+        inclusiveness: form.ex_inclusiveness.value.trim(),
+        empathy: form.ex_empathy.value.trim(),
+        trust: form.ex_trust.value.trim(),
+        collaboration: form.ex_collaboration.value.trim(),
+        recognition: form.ex_recognition.value.trim(),
+        challenge: form.ex_challenge.value.trim(),
+        flexibility: form.ex_flexibility.value.trim(),
+        result: form.ex_result.value.trim()
+      },
+      strengths: form.strengths.value.trim(),
+      advice: form.advice.value.trim(),
+      positive_example: form['positive-example'].value.trim(),
+      improvement_example: form['improvement-example'].value.trim(),
+      additional: form.additional.value.trim(),
+      timestamp: new Date().toISOString()
+    };
+
+    try {
+      const res = await fetch('https://formspree.io/f/xoeeeoqz', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || 'HTTP ' + res.status);
+      }
+
+      document.getElementById('surveyForm').style.display = 'none';
+      document.querySelector('.progress-wrap').style.display = 'none';
+      document.getElementById('thankYou').classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      alert('Не удалось отправить ответ. Проверьте интернет и попробуйте ещё раз.\n' + err.message);
+      console.error('Formspree error:', err);
+    }
+  });
+</script>
+</body>
+</html>
+
+							<script>
+                            	
+							</script>
+                        </body>
+                        </html>
+                    
